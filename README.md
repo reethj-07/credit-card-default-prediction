@@ -1,50 +1,70 @@
 # Credit Card Default Prediction
 
 ## 🚀 Project Overview
-[cite_start]This project focuses on developing a binary classification model to predict whether a credit card customer will default on their payment in the next month[cite: 306]. [cite_start]The primary goal is to minimize financial risk by accurately identifying potential defaulters, using a machine learning pipeline that includes exploratory data analysis, feature engineering, and model optimization[cite: 307].
+This project presents a binary classification model developed to predict whether a credit card customer will default on their payment in the next month. The solution focuses on minimizing the financial risk of missed defaulters by using a structured machine learning pipeline, from data analysis to model deployment.
+
+---
+
+## 🛠️ Approach and Modeling Strategy
+The project followed a systematic approach to ensure robust and reliable predictions:
+
+1.  **Data Understanding & EDA**: The process started with a comprehensive analysis of customer behavior, financial patterns, and variable distributions to understand the dataset. Key insights were derived from exploring correlations between demographics, repayment status, and billing amounts.
+
+2.  **Feature Engineering**: To improve model performance, new features were engineered, including the credit utilization ratio, repayment-to-bill ratios, average bill amounts, and delinquency patterns based on repayment history (`pay_0` to `pay_6`).
+
+3.  **Handling Class Imbalance**: As only about 19% of customers in the dataset defaulted, the class imbalance was addressed using **SMOTE (Synthetic Minority Over-sampling Technique)**. This technique generated synthetic samples for the minority class (defaulters) to improve the model's sensitivity.
+
+4.  **Model Building & Comparison**: Multiple classification algorithms were trained and compared, including Logistic Regression, Decision Tree, Random Forest, XGBoost, and LightGBM.
+
+5.  **Evaluation Metric Optimization**: Given the business importance of identifying all potential defaulters, the **F2-score** was chosen as the primary evaluation metric. This score gives more weight to recall than precision, which helps minimize costly false negatives.
+
+6.  **Threshold Tuning**: The default probability threshold of 0.5 was tuned to optimize for the F2-score. The optimal threshold was selected based on performance on the validation set to balance predictive accuracy with business impact.
+
+7.  **Validation & Prediction**: The final model was evaluated on a separate, unseen validation dataset to simulate real-world performance, and a prediction file was generated.
 
 ---
 
 ## 📊 Key Findings from EDA
 
-Exploratory Data Analysis revealed several behavioral and financial patterns linked to default risk:
-
-* [cite_start]**Payment Delays are Critical**: Customers with a history of overdue payments (`PAY_x >= 1`) show a significantly higher likelihood of defaulting[cite: 354].
-* [cite_start]**Credit Utilization**: Defaulters tend to have higher credit utilization ratios, meaning they use a larger portion of their available credit, which suggests financial overextension[cite: 427].
-* **Credit Limit**: Default rates decrease as the credit limit increases. [cite_start]Customers with lower limits (e.g., 0-50K) have the highest default rates[cite: 497, 498].
-* [cite_start]**Age**: Default rates tend to increase with age, with the 60-80 age group showing the highest risk[cite: 442, 443].
-* [cite_start]**Payment Consistency**: Defaulters exhibit lower and less consistent payment amounts, indicating irregular repayment habits[cite: 478].
+* **Payment History is Critical**: Customers with overdue payments (`PAY_x >= 1`) in multiple past months show significantly higher default rates. Overdue payment behavior is a strong contributor to default risk.
+* **Credit Utilization**: Defaulters tend to have higher credit utilization ratios, suggesting that customers spending closer to their credit limit are at greater risk.
+* **Credit Limit**: The default rate decreases as the credit limit increases. Customers with lower credit limits (0-50K) have the highest default rate.
+* **Age Groups**: Default rates show a tendency to increase with age, with the 60-80 age group exhibiting the highest default rates at around 30%.
+* **Bill & Payment Trends**: Non-defaulters have consistently higher average monthly bill amounts, suggesting that higher spending does not necessarily lead to default if managed well. Conversely, defaulters make lower and less consistent payments, indicating irregular repayment habits.
 
 ---
 
-## 🛠️ Modeling Strategy
+## 🏆 Final Model and Performance
 
-The modeling strategy was designed to handle the complexities of financial data and align with business needs:
+**Random Forest** was selected as the final model due to its superior F2-score and recall, which ensures better identification of potential defaulters.
 
-1.  [cite_start]**Feature Engineering**: New features were created to enhance model performance, including `credit_utilization`, `payment_ratio`, and `delinquency_streak`[cite: 315, 316, 317].
-2.  **Handling Class Imbalance**: The dataset was imbalanced, with only about 19% of customers defaulting. [cite_start]**SMOTE (Synthetic Minority Over-sampling Technique)** was used on the training data to create synthetic samples of the minority class (defaulters), improving the model's sensitivity[cite: 320, 321].
-3.  [cite_start]**Model Comparison**: Several models were evaluated, including Logistic Regression, Decision Tree, Random Forest, XGBoost, and LightGBM[cite: 324].
-4.  **Evaluation Metric**: The **F2-score** was prioritized, as it gives more weight to recall. [cite_start]This is crucial for minimizing false negatives (failing to predict a default), which is more costly for a financial institution[cite: 328, 581].
-5.  [cite_start]**Final Model**: **Random Forest** was selected as the best model due to its superior F2-score (86.5%) and recall (85.1%) on the internal test set[cite: 578, 585, 586, 588].
-6.  [cite_start]**Threshold Tuning**: The final classification threshold was tuned to **0.30**, which achieved the highest F2-score of 0.9033 on the validation set, making the model more sensitive to defaulters[cite: 593, 594].
+| Model               | Accuracy | Recall | F1-Score | F2-Score |
+|---------------------|----------|--------|----------|----------|
+| Logistic Regression | 77.8%    | 77.9%  | 77.8%    | 77.9%    |
+| Decision Tree       | 81.2%    | 74.2%  | 79.8%    | 76.3%    |
+| XGBoost             | 88.4%    | 83.8%  | 87.8%    | 85.4%    |
+| LightGBM            | 87.9%    | 81.9%  | 87.1%    | 83.9%    |
+| **Random Forest** | **89.1%**| **85.1%**| **88.6%**| **86.5%**|
+
+
+#### Classification Threshold
+To better identify defaulters, the classification threshold was optimized using the F2-score. A threshold of **0.30** was selected, as it achieved the highest F2-score of **0.9033** on the validation set, making the model more sensitive to credit risk.
 
 ---
 
-## 📈 Business Implications
-This predictive model offers significant business value:
-* [cite_start]**Proactive Risk Management**: By identifying high-risk customers early, the bank can apply mitigation strategies like limit reductions or tailored communication to prevent losses[cite: 598, 604].
-* [cite_start]**Reduced Financial Loss**: Prioritizing high recall minimizes the number of missed defaulters, directly protecting the bank from financial losses[cite: 597].
-* [cite_start]**Data-Driven Decisions**: The model's reliance on behavioral features (like repayment ratios) provides clear, justifiable reasons for credit decisions[cite: 602].
+## 💼 Business Implications
+
+* **Protects Against Loss**: The model's high recall helps minimize false negatives, reducing losses from defaults by allowing for early intervention.
+* **Enables Proactive Strategy**: Early warnings allow for risk-adjusted credit limits and better financial planning.
+* **Justifies Decisions**: Using behavior-based features helps justify credit actions to both customers and regulators.
 
 ---
 
 ## 📋 How to Run the Project
 1.  Clone this repository to your local machine.
 2.  Install the required libraries using pip:
-    ```
-    pip install -r requirements.txt
-    ```
-3.  Open and run the `notebook_submission__22112085.ipynb` file in a Jupyter environment. The notebook handles data loading, preprocessing, model training, and prediction.
+    `pip install -r requirements.txt`
+3.  Open and run the `notebook_submission__22112085.ipynb` file in a Jupyter environment.
 
 ---
 
